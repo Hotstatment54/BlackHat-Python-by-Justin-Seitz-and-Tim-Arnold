@@ -1,0 +1,56 @@
+CHAPTER-1: SETTING UP YOUR PYTHON ENVIRONMENT
+
+IN KALI LINUX TERMINAL:----
+  tim@kali:~$ sudo apt update 
+  tim@kali:~$ apt list --upgradable 
+  tim@kali:~$ sudo apt upgrade 
+  tim@kali:~$ sudo apt dist-upgrade 
+  tim@kali:~$ sudo apt autoremove
+
+Setting Up Python 3:
+tim@kali:~$ python3
+$ sudo apt-get upgrade python3
+tim@kali:~$ sudo apt-get install python3-venv
+#create a virtual environment.
+tim@kali:~$ mkdir bhp
+tim@kali:~$ cd bhp
+tim@kali:~/bhp$ python3 -m venv venv3 
+tim@kali:~/bhp$ source venv3/bin/activate (venv3) 
+tim@kali:~/bhp$ python
+# use the pip executable to install Python packages into venv; because it enables you to directly install Python libraries into your virtual environment
+(venv3) tim@kali:~/bhp: pip search hashcrack
+(venv3) tim@kali:~/bhp: pip install lxml
+(venv3) tim@kali:~/bhp$ python
+ Python 3.7.5 (default, Oct 27 2019, 15:43:29) 
+[GCC 9.2.1 20191022] on linux Type "help", "copyright", "credits" or "license" for more  info;
+>>> from lxml import etree
+>>> exit() 
+(venv3) tim@kali:~/bhp$ 
+
+
+Installing an IDE:
+# Justin is a fan of WingIDE (commercial and free versions available), and Tim uses Visual Studio Code 
+tim@kali#: apt-get install code
+tim@kali#: apt-get install -f ./code_1.39.2-1571154070_amd64.deb
+
+
+
+
+Code Hygiene:
+#The Python community has a such a guideline, called PEP 8. You can read the full PEP 8 guide here: https://www.python.org/dev/peps/ pep-0008/.
+—>and it ensures th
+1 from lxml import etree
+   from subprocess import Popen 
+2 import argparse 
+   import os 
+3 def get_ip(machine_name):  
+      pass  
+4 class Scanner:   
+      def __init__(self):     
+            pass 
+5 if __name__ == '__main__':   
+      scan = Scanner()   
+      print('hello')
+# name of the file containing the code is scan.py 
+—--->python scan.py  [for invoke the script]
+—--->import scan        [can import your code into another program]
