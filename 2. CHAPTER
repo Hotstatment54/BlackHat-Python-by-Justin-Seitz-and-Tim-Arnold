@@ -1,0 +1,107 @@
+CHAPTER-2: BASIC NETWORKING TOOLS:
+
+
+#No netcat. No Wireshark. No compiler, and no means to install one.
+Python Networking in a Paragraph:
+  Programmers use third-party tool to create networked servers & clients in Python;
+  -but the core module for all of those tools is socket.
+
+ —>The two most common quick network scripts:
+           Transmission Control Protocol (TCP) ,
+           User Datagram Protocol (UDP) clients ,
+           servers, use raw sockets;
+TCP Client:
+import socket
+
+target_host = "www.google.com" 
+target_port = 80 
+
+
+
+# create a socket object
+1 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+
+# connect the client 
+2 client.connect((target_host,target_port))
+
+ # send some data 
+3 client.send(b"GET / HTTP/1.1\r\nHost: google.com\r\n\r\n") 
+
+# receive some data 
+4 response = client.recv(4096) 
+
+print(response.decode()) 
+client.close()
+         
+--->code snippet makes some serious assumptions about sockets that u definitely aware:
+        1st assumption is that our connection will always succeed. 
+       2ed is that the server expects us to send data first (some servers expect to send data to         you first and await your response).
+       3rd assumption is that the server will always return data to us in a timely fashion. 
+
+
+
+UDP Client:
+  Python UDP client is not much different from a TCP client. We need to just 2 small changes  to get it to send packets in UDP form:
+
+
+import socket 
+
+target_host = "127.0.0.1" 
+target_port = 9997 
+
+# create a socket object 
+1 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
+
+# send some data 
+2 client.sendto(b"AAABBBCCC",(target_host,target_port))
+
+ # receive some data 
+3 data, addr = client.recvfrom(4096) 
+
+print(data.decode()) 
+client.close()
+
+#we change the socket type to SOCK_DGRAM 
+
+
+
+TCP Server:
+Let’s start by creating a standard multithreaded TCP server.
+
+
+import socket 
+import threading 
+
+IP = '0.0.0.0' PORT = 9998 
+def main():  
+  server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+  server.bind((IP, PORT)) 1  
+  server.listen(5) 2 
+  print(f'[*] Listening on {IP}:{PORT}')    
+
+while True:      
+    client, address = server.accept() 3  
+    print(f'[*] Accepted connection from {address[0]}:{address[1]}')    
+    client_handler = threading.Thread(target=handle_client, args=(client,))     
+    client_handler.start() 4
+
+ def handle_client(client_socket): 5 
+   with client_socket as sock:       
+           request = sock.recv(1024)      
+           print(f'[*] Received: {request.decode("utf-8")}')      
+           sock.send(b'ACK') 
+
+if __name__ == '__main__':   
+          main()
+
+
+If you use the TCP client that we built earlier, you can send some test packets to the server. You should see output like the following:
+[*] Listening on 0.0.0.0:9998
+[*] Accepted connection from: 127.0.0.1:62512 
+[*] Received: ABCDEF
+
+
+
+
+
+Replacing Netcat:
